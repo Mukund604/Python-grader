@@ -45,8 +45,9 @@ load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 CALLBACK_SECRET = os.getenv("CALLBACK_SECRET")  # For signing callbacks (optional)
-REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
-REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+# REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+# REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
+REDIS_URL = os.getenv("REDIS_URL")
 
 # Global Redis client
 redis_client: Optional[redis.Redis] = None
@@ -59,9 +60,10 @@ async def lifespan(app: FastAPI):
     """Manage Redis connection lifecycle"""
     global redis_client
     try:
-        redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+        # redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+        redis_client = redis.from_url(REDIS_URL)
         await redis_client.ping()
-        print(f"Connected to Redis at {REDIS_HOST}:{REDIS_PORT}")
+        print(f"Connected to Redis at {REDIS_URL}")
     except Exception as e:
         print(f"Warning: Redis connection failed: {e}")
         redis_client = None
