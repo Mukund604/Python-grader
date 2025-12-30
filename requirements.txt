@@ -1,0 +1,17 @@
+pymupdf
+openai
+autogen-agentchat
+autogen-ext[openai]
+python-dotenv
+asyncio
+fastapi
+uvicorn
+httpx
+pymupdf
+openai
+python-dotenv
+fastapi
+uvicorn[standard]
+httpx
+redis
+pydantic>=2.0
