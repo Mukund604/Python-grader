@@ -21,11 +21,11 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 # Import your existing modules
-from parse_pdfs import extract_text_from_pdf
-from prompt_gen import build_grading_prompt
+from app.parse_pdfs import extract_text_from_pdf
+from app.prompt_gen import build_grading_prompt
 
 # Import schemas
-from schemas import (
+from app.schemas import (
     AnalyzeSolutionRequest,
     AnalyzeSolutionResponse,
     GradeSubmissionRequest,
