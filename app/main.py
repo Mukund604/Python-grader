@@ -25,7 +25,7 @@ from app.parse_pdfs import extract_text_from_pdf
 from app.prompt_gen import build_grading_prompt
 
 # Import schemas
-from schemas import (
+from app.schemas import (
     AnalyzeSolutionRequest,
     AnalyzeSolutionResponse,
     GradeSubmissionRequest,
