@@ -21,11 +21,11 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 # Import your existing modules
-from app.parse_pdfs import extract_text_from_pdf
-from app.prompt_gen import build_grading_prompt
+from parse_pdfs import extract_text_from_pdf
+from prompt_gen import build_grading_prompt
 
 # Import schemas
-from app.schemas import (
+from schemas import (
     AnalyzeSolutionRequest,
     AnalyzeSolutionResponse,
     GradeSubmissionRequest,
@@ -45,9 +45,8 @@ load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 CALLBACK_SECRET = os.getenv("CALLBACK_SECRET")  # For signing callbacks (optional)
-# REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
-# REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
-REDIS_URL = os.getenv("REDIS_URL")
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = int(os.getenv("REDIS_PORT", 6379))
 
 # Global Redis client
 redis_client: Optional[redis.Redis] = None
@@ -60,10 +59,9 @@ async def lifespan(app: FastAPI):
     """Manage Redis connection lifecycle"""
     global redis_client
     try:
-        # redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
-        redis_client = redis.from_url(REDIS_URL)
+        redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
         await redis_client.ping()
-        print(f"Connected to Redis at {REDIS_URL}")
+        print(f"Connected to Redis at {REDIS_HOST}:{REDIS_PORT}")
     except Exception as e:
         print(f"Warning: Redis connection failed: {e}")
         redis_client = None
@@ -109,12 +107,20 @@ async def download_pdf(url: str) -> str:
 async def send_callback(callback_url: str, payload: dict) -> bool:
     """Send callback to Edge Function"""
     try:
+        headers = {"Content-Type": "application/json"}
+
+        # If the backend expects a callback secret, include it.
+        # Edge functions read this as: req.headers.get('x-callback-secret')
+        if CALLBACK_SECRET:
+            normalized = CALLBACK_SECRET.strip().strip('"').strip("'")
+            headers["X-Callback-Secret"] = normalized
+
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 callback_url,
                 json=payload,
                 timeout=30.0,
-                headers={"Content-Type": "application/json"}
+                headers=headers,
             )
             response.raise_for_status()
             print(f"Callback sent successfully: {response.status_code}")

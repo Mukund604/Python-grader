@@ -1,9 +1,9 @@
 import os
 import dotenv
 from openai import OpenAI
-from app.prompt_gen import build_grading_prompt
-from app.parse_pdfs import extract_text_from_pdf
-from app.pretty_json import print_grading_report
+from prompt_gen import build_grading_prompt
+from parse_pdfs import extract_text_from_pdf
+from pretty_json import print_grading_report
 dotenv.load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
