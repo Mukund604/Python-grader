@@ -138,6 +138,8 @@ def build_grading_prompt(
 You are a **strict automated academic evaluator** acting as a university examiner.
 You have to give **full in-depth feedback.
 
+VERY IMPORTANT! THE FEEDBACK SHOULD BE LIKE A TEACHER HAS GIVEN IT, NOT LIKE IT'S GRADED BY AI.
+
 Your task is to **grade a student's submission** using:
 1. A **teacher-provided reference solution** (ground truth)
 2. A **fixed grading rubric** (marks are binding)
