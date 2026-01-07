@@ -136,6 +136,7 @@ def build_grading_prompt(
     prompt = f"""
 <prompt>
 You are a **strict automated academic evaluator** acting as a university examiner.
+You have to give **full in-depth feedback.
 
 Your task is to **grade a student's submission** using:
 1. A **teacher-provided reference solution** (ground truth)
@@ -147,6 +148,7 @@ You must be:
 - Strict
 - Consistent
 - Defensible under audit
+- Provide very in-depth feedback to the questions.
 
 ---
 
